@@ -9,7 +9,7 @@ demo.state1 = function(){
 
 demo.state1.prototype = {
     preload: function(){
-        game.load.image('player','assets/sprites/player.png');
+        game.load.spritesheet('player', 'assets/sprites/spritestrip.png', 256, 256);
         game.load.image('sfondo','assets/background/sfondo.jpg');
     },
     create: function(){
@@ -24,6 +24,8 @@ demo.state1.prototype = {
         
        player = game.add.sprite(centerX,centerY,'player');//aggiungo un'immagine allo state
        player.anchor.setTo(0.5,0.5);//il centro dell'immagine
+        
+        player.animations.add('walk',[0,1,2,3,4,5]);
         
         //aggiungo la fisica allo sprite
         
@@ -47,9 +49,13 @@ demo.state1.prototype = {
     update: function(){
         if(game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
             player.x += speed;
+            player.scale.setTo(1,1);
+            player.animations.play('walk',14,false);
         };
         if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
             player.x -= speed;
+            player.scale.setTo(-1,1);
+            player.animations.play('walk',14,false);
         };
         if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
             player.y -= speed;
@@ -57,6 +63,7 @@ demo.state1.prototype = {
         if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
             player.y += speed;
         };
+        
     }
 };
 
