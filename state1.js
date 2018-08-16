@@ -9,7 +9,7 @@ demo.state1 = function(){
 
 demo.state1.prototype = {
     preload: function(){
-        game.load.spritesheet('player', 'assets/sprites/spritestrip.png', 256, 256);
+        game.load.spritesheet('player', 'assets/sprites/player.png', 32, 32);
         game.load.image('sfondo','assets/background/sfondo.jpg');
     },
     create: function(){
@@ -25,7 +25,9 @@ demo.state1.prototype = {
        player = game.add.sprite(centerX,centerY,'player');//aggiungo un'immagine allo state
        player.anchor.setTo(0.5,0.5);//il centro dell'immagine
         
-        player.animations.add('walk',[0,1,2,3,4,5]);
+        player.animations.add('walk',[6,7,8]);
+        player.animations.add('walkUP',[0,1,2]);
+        player.animations.add('walkDOWN',[9,10,11]);
         
         //aggiungo la fisica allo sprite
         
@@ -51,18 +53,20 @@ demo.state1.prototype = {
             player.x += speed;
             player.scale.setTo(1,1);
             player.animations.play('walk',14,false);
-        };
-        if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
+        }
+        else if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
             player.x -= speed;
             player.scale.setTo(-1,1);
             player.animations.play('walk',14,false);
-        };
-        if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
+        }
+        else if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
             player.y -= speed;
-        };
-        if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
+            player.animations.play('walkDOWN',false);
+        }
+        else if(game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){
             player.y += speed;
-        };
+            player.animations.play('walkUP',false);
+        }
         
     }
 };
