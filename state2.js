@@ -3,13 +3,23 @@ var cursor;
 var vel = 200;
 var rocks;
 var grass;
+var bullets;
+var firerate = 200;
+nextfire = 0;
 demo.state2.prototype = {
     preload: function(){
     game.load.tilemap('field', 'assets/map/field.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('grassTiles', 'assets/map/grassTiles.png');
     game.load.image('rockTiles', 'assets/map/rockTiles.png');
         
+        
+        
     game.load.spritesheet('player', 'assets/sprites/player.png', 32, 32);
+        
+        //carico i proiettili
+    game.load.spritesheet('bullet','assets/sprites/bullets_sprite.png', 40 ,30,41);
+        
+
     },
     create: function(){
         
@@ -31,6 +41,15 @@ demo.state2.prototype = {
         
     player = game.add.sprite(centerX,centerY,'player');
     game.physics.enable(player);
+    
+    //creo il gruppo dei bullets 
+    bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bullets.createMultiple(1000,'bullet');//creo 50 proiettili
+    //confuguro i proiettili
+    bullets.setAll('checkWorldBounds',true);
+    bullets.setAll('outOfBoundsKill',true);
         
     cursor = game.input.keyboard.createCursorKeys();
         
@@ -56,5 +75,21 @@ demo.state2.prototype = {
             player.body.velocity.y = 0;
             player.body.velocity.x=0;
         }
+        
+        if(game.input.activePointer.isDown){
+            this.fire();
+        }
+    },
+    fire: function(){
+        console.log('firing');
+        if(game.time.now > nextfire){
+        nextfire = game.time.now + firerate;
+        var bullet = bullets.getFirstDead();//prendo il primo utile
+        bullet.reset(player.x,player.y);//lo creo nel giocatore
+        
+        game.physics.arcade.moveToPointer(bullet,vel);//lo sparo nella direzzione del mouse
+        bullet.rotation = game.physics.arcade.angleToPointer(bullet);//lo oriento secondo il mouse
+           }
+
     }
 }
